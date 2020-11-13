@@ -1,27 +1,27 @@
-export default (matrix, size) => {
-  const cellSize = size / matrix.length
-  let path = ''
+import React from "react";
+import { Circle } from "react-native-svg";
+
+export default (matrix, size, color) => {
+  const cellSize = size / matrix.length;
+  let path = "";
   matrix.forEach((row, i) => {
-    let needDraw = false
+    let needDraw = false;
     row.forEach((column, j) => {
       if (column) {
-        if (!needDraw) {
-          path += `M${cellSize * j} ${cellSize / 2 + cellSize * i} `
-          needDraw = true
-        }
-        if (needDraw && j === matrix.length - 1) {
-          path += `L${cellSize * (j + 1)} ${cellSize / 2 + cellSize * i} `
-        }
-      } else {
-        if (needDraw) {
-          path += `L${cellSize * j} ${cellSize / 2 + cellSize * i} `
-          needDraw = false
-        }
+        circles.push(
+          <Circle
+            key={`${i}${j}`}
+            cx={cellSize * j + cellSize / 2}
+            cy={cellSize / 2 + cellSize * i}
+            r={cellSize / 2}
+            fill={color}
+          />
+        );
       }
-    })
-  })
+    });
+  });
   return {
     cellSize,
-    path
-  }
-}
+    path,
+  };
+};

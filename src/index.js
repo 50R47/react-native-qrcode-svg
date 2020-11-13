@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo } from "react";
 import Svg, {
   Defs,
   G,
@@ -7,10 +7,10 @@ import Svg, {
   Image,
   ClipPath,
   LinearGradient,
-  Stop
-} from 'react-native-svg'
-import genMatrix from './genMatrix'
-import transformMatrixIntoPath from './transformMatrixIntoPath'
+  Stop,
+} from "react-native-svg";
+import genMatrix from "./genMatrix";
+import transformMatrixIntoPath from "./transformMatrixIntoPath";
 
 const renderLogo = ({
   size,
@@ -18,17 +18,17 @@ const renderLogo = ({
   logoSize,
   logoBackgroundColor,
   logoMargin,
-  logoBorderRadius
+  logoBorderRadius,
 }) => {
-  const logoPosition = (size - logoSize - logoMargin * 2) / 2
-  const logoBackgroundSize = logoSize + logoMargin * 2
+  const logoPosition = (size - logoSize - logoMargin * 2) / 2;
+  const logoBackgroundSize = logoSize + logoMargin * 2;
   const logoBackgroundBorderRadius =
-    logoBorderRadius + (logoMargin / logoSize) * logoBorderRadius
+    logoBorderRadius + (logoMargin / logoSize) * logoBorderRadius;
 
   return (
     <G x={logoPosition} y={logoPosition}>
       <Defs>
-        <ClipPath id='clip-logo-background'>
+        <ClipPath id="clip-logo-background">
           <Rect
             width={logoBackgroundSize}
             height={logoBackgroundSize}
@@ -36,7 +36,7 @@ const renderLogo = ({
             ry={logoBackgroundBorderRadius}
           />
         </ClipPath>
-        <ClipPath id='clip-logo'>
+        <ClipPath id="clip-logo">
           <Rect
             width={logoSize}
             height={logoSize}
@@ -50,58 +50,58 @@ const renderLogo = ({
           width={logoBackgroundSize}
           height={logoBackgroundSize}
           fill={logoBackgroundColor}
-          clipPath='url(#clip-logo-background)'
+          clipPath="url(#clip-logo-background)"
         />
       </G>
       <G x={logoMargin} y={logoMargin}>
         <Image
           width={logoSize}
           height={logoSize}
-          preserveAspectRatio='xMidYMid slice'
+          preserveAspectRatio="xMidYMid slice"
           href={logo}
-          clipPath='url(#clip-logo)'
+          clipPath="url(#clip-logo)"
         />
       </G>
     </G>
-  )
-}
+  );
+};
 
 const QRCode = ({
-  value = 'this is a QR code',
+  value = "this is a QR code",
   size = 100,
-  color = 'black',
-  backgroundColor = 'white',
+  color = "black",
+  backgroundColor = "white",
   logo,
   logoSize = size * 0.2,
-  logoBackgroundColor = 'transparent',
+  logoBackgroundColor = "transparent",
   logoMargin = 2,
   logoBorderRadius = 0,
   quietZone = 0,
   enableLinearGradient = false,
-  gradientDirection = ['0%', '0%', '100%', '100%'],
-  linearGradient = ['rgb(255,0,0)', 'rgb(0,255,255)'],
-  ecl = 'M',
+  gradientDirection = ["0%", "0%", "100%", "100%"],
+  linearGradient = ["rgb(255,0,0)", "rgb(0,255,255)"],
+  ecl = "M",
   getRef,
-  onError
+  onError,
 }) => {
   const result = useMemo(() => {
     try {
-      return transformMatrixIntoPath(genMatrix(value, ecl), size)
+      return transformMatrixIntoPath(genMatrix(value, ecl), size, color);
     } catch (error) {
-      if (onError && typeof onError === 'function') {
-        onError(error)
+      if (onError && typeof onError === "function") {
+        onError(error);
       } else {
         // Pass the error when no handler presented
-        throw error
+        throw error;
       }
     }
-  }, [value, size, ecl])
+  }, [value, size, ecl]);
 
   if (!result) {
-    return null
+    return null;
   }
 
-  const { path, cellSize } = result
+  const { path, cellSize, circles } = result;
 
   return (
     <Svg
@@ -110,21 +110,21 @@ const QRCode = ({
         -quietZone,
         -quietZone,
         size + quietZone * 2,
-        size + quietZone * 2
-      ].join(' ')}
+        size + quietZone * 2,
+      ].join(" ")}
       width={size}
       height={size}
     >
       <Defs>
         <LinearGradient
-          id='grad'
+          id="grad"
           x1={gradientDirection[0]}
           y1={gradientDirection[1]}
           x2={gradientDirection[2]}
           y2={gradientDirection[3]}
         >
-          <Stop offset='0' stopColor={linearGradient[0]} stopOpacity='1' />
-          <Stop offset='1' stopColor={linearGradient[1]} stopOpacity='1' />
+          <Stop offset="0" stopColor={linearGradient[0]} stopOpacity="1" />
+          <Stop offset="1" stopColor={linearGradient[1]} stopOpacity="1" />
         </LinearGradient>
       </Defs>
       <G>
@@ -136,13 +136,7 @@ const QRCode = ({
           fill={backgroundColor}
         />
       </G>
-      <G>
-        <Path
-          d={path}
-          stroke={enableLinearGradient ? 'url(#grad)' : color}
-          strokeWidth={cellSize}
-        />
-      </G>
+      <G>{circles}</G>
       {logo &&
         renderLogo({
           size,
@@ -150,10 +144,10 @@ const QRCode = ({
           logoSize,
           logoBackgroundColor,
           logoMargin,
-          logoBorderRadius
+          logoBorderRadius,
         })}
     </Svg>
-  )
-}
+  );
+};
 
-export default QRCode
+export default QRCode;
