@@ -10,7 +10,7 @@ export default (matrix, size, color) => {
       if (column) {
         circles.push(
           <Circle
-            key={`${i}${j}`}
+            key={`${i}-${j}`}
             cx={cellSize * j + cellSize / 2}
             cy={cellSize / 2 + cellSize * i}
             r={cellSize / 2}
