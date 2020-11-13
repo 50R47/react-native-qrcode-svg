@@ -4,8 +4,8 @@ import { Circle } from "react-native-svg";
 export default (matrix, size, color) => {
   const cellSize = size / matrix.length;
   let path = "";
+  let circles = [];
   matrix.forEach((row, i) => {
-    let needDraw = false;
     row.forEach((column, j) => {
       if (column) {
         circles.push(
@@ -23,5 +23,6 @@ export default (matrix, size, color) => {
   return {
     cellSize,
     path,
+    circles,
   };
 };
