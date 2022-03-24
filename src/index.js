@@ -11,6 +11,7 @@ import Svg, {
 } from 'react-native-svg'
 import genMatrix from './genMatrix'
 import transformMatrixIntoPath from './transformMatrixIntoPath'
+import transformMatrixIntoCirclePath from './transformMatrixIntoCirclePath'
 
 const renderLogo = ({
   size,
@@ -81,12 +82,17 @@ const QRCode = ({
   gradientDirection = ['0%', '0%', '100%', '100%'],
   linearGradient = ['rgb(255,0,0)', 'rgb(0,255,255)'],
   ecl = 'M',
+  mode = 'default',
   getRef,
   onError
 }) => {
   const result = useMemo(() => {
     try {
-      return transformMatrixIntoPath(genMatrix(value, ecl), size)
+      if (mode === 'default') {
+        return transformMatrixIntoPath(genMatrix(value, ecl), size)
+      } else {
+        return transformMatrixIntoCirclePath(genMatrix(value, ecl), size)
+      }
     } catch (error) {
       if (onError && typeof onError === 'function') {
         onError(error)
@@ -139,10 +145,87 @@ const QRCode = ({
       <G>
         <Path
           d={path}
+          fill={enableLinearGradient ? 'url(#grad)' : color}
+          strokeLinecap='butt'
           stroke={enableLinearGradient ? 'url(#grad)' : color}
-          strokeWidth={cellSize}
+          strokeWidth={mode === 'default' ? cellSize : 0}
         />
       </G>
+
+      <Rect
+        x={0.5 * cellSize}
+        y={0.5 * cellSize}
+        width={6 * cellSize}
+        height={6 * cellSize}
+        strokeWidth={cellSize}
+        strokeLinecap={"round"}
+        strokeLinejoin={"round"}
+        stroke="rgb(255,0,0)"
+      />
+      <Rect
+        x={2 * cellSize}
+        y={2 * cellSize}
+        width={3 * cellSize}
+        height={3 * cellSize}
+        fill="rgb(0,0,255)"
+        strokeLinecap={"round"}
+        strokeLinejoin={"round"}
+      />
+      <Rect
+        x={0.5 * cellSize}
+        y={26.5 * cellSize}
+        width={6 * cellSize}
+        height={6 * cellSize}
+        strokeWidth={cellSize}
+        strokeLinecap={"round"}
+        strokeLinejoin={"round"}
+        stroke="rgb(255,0,0)"
+      />
+      <Rect
+        x={28 * cellSize}
+        y={2 * cellSize}
+        width={3 * cellSize}
+        height={3 * cellSize}
+        fill="rgb(0,0,255)"
+        strokeLinecap={"round"}
+        strokeLinejoin={"round"}
+      />
+      <Rect
+        x={26.5 * cellSize}
+        y={0.5 * cellSize}
+        width={6 * cellSize}
+        height={6 * cellSize}
+        strokeWidth={cellSize}
+        strokeLinecap={"round"}
+        strokeLinejoin={"round"}
+        stroke="rgb(255,0,0)"
+      />
+      <Rect
+        x={2 * cellSize}
+        y={28 * cellSize}
+        width={3 * cellSize}
+        height={3 * cellSize}
+        fill="rgb(0,0,255)"
+        strokeLinecap={"round"}
+        strokeLinejoin={"round"}
+      />
+      <Rect
+        x={24.5 * cellSize}
+        y={24.5 * cellSize}
+        width={4 * cellSize}
+        height={4 * cellSize}
+        strokeWidth={cellSize}
+        strokeLinecap={"round"}
+        strokeLinejoin={"round"}
+        stroke="rgb(255,0,0)"
+      />
+      <Rect
+        x={25.75 * cellSize}
+        y={25.75 * cellSize}
+        width={1.5 * cellSize}
+        height={1.5 * cellSize}
+        fill="rgb(0,0,255)"
+      />
       {logo &&
         renderLogo({
           size,
